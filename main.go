@@ -44,7 +44,6 @@ func PrintHelp() {
 	fmt.Fprintln(os.Stderr, "SYNTAX: gcalc -op {add|sub|mul|div} num1 num2")
 	fmt.Println()
 	flag.PrintDefaults()
-	fmt.Println()
 }
 
 func HandleError(errMsg string) {
