@@ -13,18 +13,15 @@ var operation = flag.String("op", "", "the operation to perform, possible values
 func main() {
 	flag.Parse()
 	if len(flag.Args()) != 2 {
-		fmt.Println("you must provide two numbers for the operation")
-		os.Exit(1)
+		HandleError("you must provide two numbers for the operation")
 	}
 	num1, err := strconv.ParseFloat(flag.Arg(0), 64)
 	if err != nil {
-		fmt.Printf("the value %q cannot be parsed as a number\n", flag.Arg(0))
-		os.Exit(1)
+		HandleError(fmt.Sprintf("the value %q cannot be parsed as a number", flag.Arg(0)))
 	}
 	num2, err := strconv.ParseFloat(flag.Arg(1), 64)
 	if err != nil {
-		fmt.Printf("the value %q cannot be parsed as a number\n", flag.Arg(1))
-		os.Exit(1)
+		HandleError(fmt.Sprintf("the value %q cannot be parsed as a number", flag.Arg(1)))
 	}
 	*operation = strings.TrimSpace(*operation)
 	var result float64
@@ -38,8 +35,21 @@ func main() {
 	case "div":
 		result = num1 / num2
 	default:
-		fmt.Printf("the operation %q is not valid\n", *operation)
-		os.Exit(1)
+		HandleError(fmt.Sprintf("the operation %q is not valid", *operation))
 	}
 	fmt.Println(result)
+}
+
+func PrintHelp() {
+	fmt.Fprintln(os.Stderr, "SYNTAX: gcalc -op {add|sub|mul|div} num1 num2")
+	fmt.Println()
+	flag.PrintDefaults()
+	fmt.Println()
+}
+
+func HandleError(errMsg string) {
+	fmt.Println("ERROR:", errMsg)
+	fmt.Println()
+	PrintHelp()
+	os.Exit(1)
 }
